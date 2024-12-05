@@ -1,30 +1,32 @@
 function love.draw()
-	love.graphics.rectangle("fill", X, Y, 50, 80)
-
-	for i, value in ipairs(NPCS) do
-		love.graphics.print(value, 100, 100 + 50 * i)
+	for i, v in ipairs(rectangles) do
+		love.graphics.rectangle("line", v.x, v.y, v.width, v.height)
 	end
+end
+
+function createRect()
+	RECT = {}
+	RECT.width = 100
+	RECT.height = 50
+	RECT.x = 100
+	RECT.y = 100
+	RECT.speed = 80
+
+	table.insert(rectangles, RECT)
 end
 
 function love.load()
-	NPCS = { "fish1", "fish2" }
-	X = 100
-	Y = 100
-	table.insert(NPCS, "shrimp")
+	rectangles = {}
+end
+
+function love.keypressed(key)
+	if key == "space" then
+		createRect()
+	end
 end
 
 function love.update(dt)
-	if love.keyboard.isDown("right") then
-		X = X + 40 * dt
-	end
-	if love.keyboard.isDown("left") then
-		X = X - 40 * dt
-	end
-	-- reverse euclidian right?
-	if love.keyboard.isDown("up") then
-		Y = Y - 40 * dt
-	end
-	if love.keyboard.isDown("down") then
-		Y = Y + 40 * dt
+	for i, v in ipairs(rectangles) do
+		v.x = v.x + v.speed * dt
 	end
 end
