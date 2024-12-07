@@ -1,22 +1,25 @@
+require("example")
+
+function love.load()
+	TICK = require("tick")
+	RECT = require("rect")
+	RECTANGALES = {}
+	DRAW_REC = false
+
+	TICK.delay(function()
+		DRAW_REC = true
+	end, 2)
+end
+
 function love.draw()
-	for i, v in ipairs(rectangles) do
-		love.graphics.rectangle("line", v.x, v.y, v.width, v.height)
+	for _, v in ipairs(RECTANGALES) do
+		v:draw()
 	end
 end
 
-function createRect()
-	RECT = {}
-	RECT.width = 100
-	RECT.height = 50
-	RECT.x = 100
-	RECT.y = 100
-	RECT.speed = 80
-
-	table.insert(rectangles, RECT)
-end
-
-function love.load()
-	rectangles = {}
+local function createRect()
+	local rect = RECT:new(100, 80, 100)
+	table.insert(RECTANGALES, rect)
 end
 
 function love.keypressed(key)
@@ -26,7 +29,9 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-	for i, v in ipairs(rectangles) do
-		v.x = v.x + v.speed * dt
+	TICK.update(dt)
+
+	for _, v in ipairs(RECTANGALES) do
+		v:update(dt)
 	end
 end
