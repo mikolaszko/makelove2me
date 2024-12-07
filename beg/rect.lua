@@ -1,19 +1,19 @@
 local Rect = {}
 Rect.__index = Rect
 
-function Rect:new(w, h, s)
+function Rect:new(w, h, s, x, y)
 	local rect = {}
 	rect.width = w
 	rect.height = h
 	rect.s = s
-	rect.y = math.random(100, 500)
-	rect.x = math.random(100, 500)
+	rect.y = y
+	rect.x = x 
 	setmetatable(rect, Rect)
 	return rect
 end
 
-function Rect:draw()
-	love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
+function Rect:draw(mode)
+	love.graphics.rectangle(mode, self.x, self.y, self.width, self.height)
 end
 
 function Rect:update(dt)
