@@ -1,46 +1,37 @@
 function love.load()
-    love.window.setFullscreen(true)
-    CIRCLE = {}
+    image = love.graphics.newImage("quad_row_antibleed.png")
+    frames = {}
 
-    CIRCLE.x = 100
-    CIRCLE.y = 100
-    CIRCLE.radius = 25
-    CIRCLE.speed = 200
+    local frame_width = 117
+    local frame_height = 223
+    local img_width = image:getWidth()
+    local img_height = image:getHeight()
+
+    for i=0,1 do
+        for j=0,2 do
+            table.insert(frames,
+                love.graphics.newQuad(
+                    1 + j * (frame_width + 2),
+                    1 + i * (frame_height + 2),
+                    frame_width,
+                    frame_height,
+                    img_width,
+                    img_height
+            ))
+            if #frames == 5 then
+                break
+            end
+        end
+    end
+    currentFrame = 1
 end
-
-local function getDistance(x1, y1, x2, y2)
-    local hor_dis = x1 - x2
-    local ver_dis = y1 - y2
-
-    local a = hor_dis^2
-    local b = ver_dis^2
-    local c = a + b
-    local distance = math.sqrt(c)
-    return distance
+function love.update(dt)
+    currentFrame = currentFrame + 10 * dt
+    if currentFrame > 5 then
+        currentFrame = 1
+    end
 end
 
 function love.draw()
-    love.graphics.circle("line", CIRCLE.x, CIRCLE.y, CIRCLE.radius)
-
-    love.graphics.line(CIRCLE.x, CIRCLE.y, mouse_x, CIRCLE.y)
-    love.graphics.line(CIRCLE.x, CIRCLE.y, CIRCLE.x, mouse_y)
-    love.graphics.line(CIRCLE.x, CIRCLE.y, mouse_x, mouse_y)
-    local distance = getDistance(CIRCLE.x, CIRCLE.y, mouse_x, mouse_y)
-
-    love.graphics.circle("line", CIRCLE.x, CIRCLE.y, distance);
-end
-
-function love.update(dt)
-    mouse_x, mouse_y = love.mouse.getPosition()
-
-    local angle = math.atan2((mouse_y - CIRCLE.y), (mouse_x - CIRCLE.x))
-    
-    local cos = math.cos(angle)
-    local sin = math.sin(angle)
-    local distance = getDistance(CIRCLE.x, CIRCLE.y, mouse_x, mouse_y)
-
-    if distance < 400 then
-        CIRCLE.x = CIRCLE.x + CIRCLE.speed * cos * (distance/100) * dt
-        CIRCLE.y = CIRCLE.y + CIRCLE.speed * sin * (distance/100) * dt
-    end
+    love.graphics.draw(image, frames[math.floor(currentFrame)], 100, 100)
 end
